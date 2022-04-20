@@ -12,25 +12,32 @@ server.listen(port, () => {
 });
 
 io.on('connection', (socket) => {
-    console.log('connection')
+    console.log('connection');
     socket.on('auth', (data) => {
+        console.log('auth:', data)
         if (data === process.env.AUTH_KEY) {
+            console.log('auth success');
             clients[socket.id] = socket;
         }
     })
 
     socket.on('data', (data) => {
-        data = JSON.parse(data);
-        if (typeof data['brokerAuthKey'] !== 'undefined') {
-            if (data['brokerAuthKey'] === process.env.BROKER_AUTH_KEY) {
-                delete data['brokerAuthKey'];
-                data = JSON.stringify(data);
-                console.log(data);
+        try {
+            data = JSON.parse(data);
+            console.log(data);
+            if (typeof data['brokerAuthKey'] !== 'undefined') {
+                if (data['brokerAuthKey'] === process.env.BROKER_TOKEN) {
+                    delete data['brokerAuthKey'];
+                    data = JSON.stringify(data);
+                    console.log(data);
 
-                Object.keys(clients).forEach(clientId => {
-                    clients[clientId].emit('data', data);
-                });
+                    Object.keys(clients).forEach(clientId => {
+                        clients[clientId].emit('data', data);
+                    });
+                }
             }
+        } catch (e) {
+            console.error(e);
         }
     });
 
