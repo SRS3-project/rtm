@@ -1,8 +1,9 @@
+if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'development')
+    require('dotenv').config()
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-require('dotenv').config()
 
 const clients = {};
 
