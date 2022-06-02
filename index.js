@@ -7,7 +7,7 @@ const io = require('socket.io')(server);
 
 const clients = {};
 
-const port = parseInt(process.env.PORT) || 3000;
+const port = parseInt(process.env.PORT) || 3500;
 server.listen(port, () => {
     console.log('Server listening at port %d', port);
 });
